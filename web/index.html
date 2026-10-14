@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maths Shorts Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">∿</span>
+    <div>
+      <div class="eyebrow">Maths in the Wild</div>
+      <div class="brand-name">Shorts Studio</div>
+    </div>
+  </div>
+  <nav class="nav">
+    <button class="nav-btn active" data-view="create">Create</button>
+    <button class="nav-btn" data-view="library">Library</button>
+    <button class="nav-btn icon" id="open-settings" title="Settings" aria-label="Settings">⚙</button>
+  </nav>
+</header>
+
+<main>
+  <!-- ============================================================ CREATE -->
+  <section id="view-create" class="view active">
+    <ol class="stepper">
+      <li data-step="1" class="active"><span>1</span>Topic</li>
+      <li data-step="2" id="stepper-review" class="optional"><span>2</span>Check the script</li>
+      <li data-step="3"><span>3</span>Video</li>
+    </ol>
+
+    <!-- Step 1 -->
+    <div class="step active" id="step-1">
+      <div class="card hero-card">
+        <h1>Type a maths topic. Get a video.</h1>
+        <p class="lede">Just the name is enough, like <i>eigenvalues</i> or <i>compound interest</i>. The studio searches the web,
+          writes a hook → setup → maths → payoff script, fact-checks the numbers, records the voice and animates it.</p>
+        <div id="key-banner" class="banner warn hidden">
+          No Gemini key yet. <button class="link" data-open-settings>Add your free key</button> or switch on Demo mode.
+        </div>
+        <div class="topic-row">
+          <input id="topic" type="text" placeholder="e.g. Eigenvalues" autocomplete="off" aria-label="Topic">
+          <button class="btn primary big" id="btn-go">🎬 Make video</button>
+        </div>
+        <div class="chips" id="ideas"></div>
+        <div class="row between">
+          <label class="toggle"><input type="checkbox" id="demo"><span class="track"></span>Demo mode <small>(no key needed: UPI pay-later example)</small></label>
+          <label class="check"><input type="checkbox" id="review-first"> Let me check the script before the video is made</label>
+        </div>
+        <details class="options" id="options">
+          <summary>Options <span class="muted small" id="options-summary"></span></summary>
+          <div class="grid-4">
+            <label class="field"><span>Language</span><select id="language"></select></label>
+            <label class="field"><span>Length</span>
+              <select id="seconds"><option value="45">45 s</option><option value="60" selected>60 s</option><option value="75">75 s</option><option value="90">90 s</option></select></label>
+            <label class="field"><span>Audience</span>
+              <select id="level"><option>college students</option><option>school students (class 8–12)</option><option>general public</option></select></label>
+            <label class="field"><span>Voice</span><select id="voice"></select></label>
+            <label class="field"><span>Quality</span>
+              <select id="quality"><option value="draft">Draft · 540×960 · faster</option><option value="final">Final · 1080×1920</option></select></label>
+            <label class="field"><span>Speech speed <b id="rate-val">0%</b></span><input id="rate" type="range" min="-20" max="20" step="5" value="0"></label>
+            <label class="field"><span>Animation</span>
+              <select id="scene-mode"><option value="llm">Gemini designs it</option><option value="template">Simple template</option></select></label>
+            <label class="field"><span>Attempts before template</span><input id="attempts" type="number" min="1" max="5" value="3"></label>
+            <label class="field"><span>Brand line</span><input id="brand" type="text" value="MATHS IN THE WILD" maxlength="40"></label>
+          </div>
+        </details>
+        <div id="script-error" class="banner error hidden"></div>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step" id="step-2">
+      <div class="review">
+        <div class="review-main">
+          <div class="card">
+            <label class="field"><span>Title</span><input id="title" type="text"></label>
+            <div class="est" id="total-est"></div>
+          </div>
+          <div id="beats"></div>
+        </div>
+        <aside class="review-side">
+          <div class="card verify" id="verify-card">
+            <h3>Check these before rendering</h3>
+            <p class="muted small">AI can get numbers wrong. Fix anything here in the beat boxes.</p>
+            <ul id="verify-list"></ul>
+          </div>
+          <details class="card" id="sources-card"><summary>Web sources <span id="source-count"></span></summary><ul id="source-list" class="sources"></ul></details>
+          <details class="card" id="notes-card"><summary>Research notes</summary><div id="notes" class="notes"></div></details>
+          <div class="card">
+            <label class="field"><span>Video description</span><textarea id="description" rows="4"></textarea></label>
+          </div>
+          <p class="muted small">Language, voice and quality are under <b>Options</b> on step 1.</p>
+          <div class="side-actions">
+            <button class="btn ghost" data-goto="1">← Back</button>
+            <button class="btn primary" id="btn-video">Make video</button>
+          </div>
+          <div id="video-error" class="banner error hidden"></div>
+        </aside>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step" id="step-3">
+      <div class="render">
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-screen" id="phone-screen">
+            <div class="rendering-placeholder" id="placeholder">
+              <div class="wave"><span></span><span></span><span></span><span></span><span></span></div>
+              <p id="placeholder-text">Starting…</p>
+            </div>
+            <video id="player" class="hidden" controls playsinline></video>
+          </div>
+        </div>
+        <div class="render-side">
+          <div class="card">
+            <h2 id="render-title">Making your short</h2>
+            <p class="muted small" id="render-topic"></p>
+            <ol class="phases" id="phases">
+              <li data-phase="research" class="auto-only"><span class="dot"></span><div><b>Research</b><small>Searching the web</small></div></li>
+              <li data-phase="script" class="auto-only"><span class="dot"></span><div><b>Script</b><small>Hook, setup, maths, payoff</small></div></li>
+              <li data-phase="check" class="auto-only"><span class="dot"></span><div><b>Fact-check</b><small id="check-sub">Recomputing every number</small></div></li>
+              <li data-phase="voice"><span class="dot"></span><div><b>Narration</b><small>Recording each beat</small></div></li>
+              <li data-phase="anim"><span class="dot"></span><div><b>Animation</b><small id="anim-sub">Writing the Manim scene</small></div></li>
+              <li data-phase="mix"><span class="dot"></span><div><b>Mixing</b><small>Putting voice and picture together</small></div></li>
+            </ol>
+            <div id="result" class="hidden">
+              <div id="result-notes"></div>
+              <details class="checked hidden" id="checked"><summary>What was checked</summary>
+                <div id="checked-body"></div></details>
+              <div class="downloads">
+                <a class="btn primary" id="dl-mp4">⬇ Video (MP4)</a>
+                <a class="btn ghost" id="dl-srt">⬇ Captions (SRT)</a>
+                <a class="btn ghost" id="dl-scene">⬇ Manim scene</a>
+                <button class="btn ghost" id="copy-desc">Copy description</button>
+              </div>
+              <div class="row gap">
+                <button class="btn ghost" data-goto="2">← Edit script &amp; re-make</button>
+                <button class="btn ghost" id="btn-new">New topic</button>
+              </div>
+            </div>
+            <div id="render-error" class="banner error hidden"></div>
+          </div>
+          <details class="card log-card" open><summary>Live log</summary><pre id="log" class="log"></pre></details>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ LIBRARY -->
+  <section id="view-library" class="view">
+    <div class="lib-head">
+      <h1>Library</h1>
+      <p class="muted">Every short you've made, saved in the <code>outputs</code> folder.</p>
+    </div>
+    <div class="lib-grid" id="lib-grid"></div>
+    <p class="muted hidden" id="lib-empty">Your finished shorts will appear here.</p>
+  </section>
+</main>
+
+<!-- ============================================================ SETTINGS -->
+<dialog id="settings">
+  <form method="dialog" class="settings-body">
+    <h2>Settings</h2>
+    <div class="field">
+      <span>Gemini API key</span>
+      <div class="key-status" id="key-status"></div>
+      <div class="row gap">
+        <input id="key-input" type="password" placeholder="Paste key from aistudio.google.com/apikey" autocomplete="off">
+        <button class="btn primary" id="save-key" type="button">Save</button>
+      </div>
+      <small class="muted">Saved in the <code>.env</code> file on this computer. It is never shown again or sent anywhere except Google.</small>
+    </div>
+    <label class="field"><span>Model for research &amp; script</span><input id="model" type="text"></label>
+    <label class="field"><span>Model for animation code</span><input id="code-model" type="text">
+      <small class="muted">A Pro model writes more reliable animations but uses more quota.</small></label>
+    <div class="field"><span>LaTeX</span><div id="latex-status" class="small"></div></div>
+    <div class="row end"><button class="btn ghost">Close</button></div>
+  </form>
+</dialog>
+
+<script src="app.js"></script>
+</body>
+</html>

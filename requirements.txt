@@ -1,0 +1,8 @@
+manim>=0.19,<0.23
+edge-tts>=7.0
+google-genai>=2.0
+streamlit>=1.40
+imageio-ffmpeg>=0.5
+pydantic>=2.6
+fastapi>=0.110
+uvicorn[standard]>=0.29
