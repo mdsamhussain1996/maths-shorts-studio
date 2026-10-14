@@ -102,3 +102,6 @@ python make_short.py --demo
 | `studio/fallback_scene.py` | Template scene used when Gemini's scene can't render |
 | `studio/tts.py`, `studio/assemble.py` | Voice, captions, final mixing |
 | `studio/demo.py` | Demo script and scene |
+
+## Author & Portfolio
+Created by [mdsamhussain1996](https://mdsamhussain1996.github.io/) — visit my [Portfolio](https://mdsamhussain1996.github.io/) for more interactive maths, research, and AI platforms.

@@ -246,3 +246,20 @@ dialog::backdrop { background: rgba(0,0,0,.6); backdrop-filter: blur(3px); }
   .topic-row { flex-direction: column; }
   .topic-row .btn { justify-content: center; }
 }
+
+.nav-btn { text-decoration: none; display: inline-flex; align-items: center; }
+.site-footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--muted);
+  font-size: 0.85rem;
+  border-top: 1px solid var(--line);
+  margin-top: 40px;
+}
+.site-footer a {
+  color: var(--accent);
+  text-decoration: none;
+}
+.site-footer a:hover {
+  text-decoration: underline;
+}
